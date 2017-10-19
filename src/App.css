@@ -67,6 +67,16 @@ h5 {
   overflow: hidden;
 }
 
+span.percent {
+  font-size: 13px;
+  padding-top: 12px;
+  vertical-align: middle;
+}
+
+span{
+  display: block;
+}
+
 .row {
   padding-left: 0px;
   white-space: nowrap;
@@ -121,19 +131,26 @@ h5 {
 }
 
 .main{
+  margin: auto;
+  width: 700px;
   border: 1px solid blue;
   white-space: nowrap;
 }
 
 .nav {
+  float: left;
   margin: auto;
   padding: 10px;
   display: inline-block;
   /*min-width: 50px;*/
-  max-width: 200px;
+  max-width: 100px;
   border: 2px solid pink;
   overflow: hidden;
   vertical-align: top;
+}
+
+.nav:hover {
+  max-width: initial;
 }
 
 .nav-item {
@@ -141,26 +158,47 @@ h5 {
 }
 
 .stats {
+  float: left;
   margin-left: 2px;
   display: inline-block;
   overflow: hidden;
 }
 
-.potato {
-  margin-top: 10px;
-  vertical-align: middle;
-}
 
-span{
-  display: block;
-}
 
 .standing{
+  margin-top: 0px;
+  padding-top: 1px;
+  height: 20px;
+  width: 20px;
+  float: left;
   display: inline-block;
-  border: 1px solid gray;
+  border-right: 1px solid gray;
+}
+
+.teamname{
+  display: inline-block;
+  margin-top: -2px;
 }
 
 .winloss{
-  display: inline-block;
-  border: 1px solid gray;
+  /*display: inline-block;*/
+  margin-top: -5px;
+  border-top: 1px solid gray;
+}
+
+
+.potato {
+  padding-top: 10px;
+  vertical-align: middle;
+}
+
+
+.floatL {
+  float: left;
+  padding: 2px 0px 0px 0px;
+  width: 50px;
+  height: 20px;
+  font-size: 13px;
+  border-right: 1px solid gray;
 }

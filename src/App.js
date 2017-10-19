@@ -89,10 +89,10 @@ class Row extends Component {
             {nameData}
           </li>
           <li className="cat">
-            <span className="potato">{this.state.fg}</span>
+            <span className="percent">{this.state.fg}</span>
           </li>
           <li className="cat">
-            <span className="potato">{this.state.ft}</span>
+            <span className="percent">{this.state.ft}</span>
           </li>
           <li className="cat">
             <span className="potato">{this.state.threes}</span>
@@ -124,14 +124,16 @@ class Row extends Component {
 
 const TeamData = (props) => (
   <div className="tdName">
-    <div className="teamname">
-      <h5>{props.teamname}</h5>
-    </div>
     <div className="standing">
       <span>12</span>
     </div>
+
+    <div className="teamname">
+      <h5>{props.teamname}</h5>
+    </div>
+    
     <div className="winloss">
-      <span>10-10-0</span>
+      <span className="floatL">10-10-0</span>
     </div>
   </div>
 )
@@ -140,7 +142,7 @@ const TopRow = (props) => (
   <div className="nil">
     <ul className="topRow">
         <li className="topDiv name">
-          <h4>Team Name</h4>
+          <h4>Team</h4>
         </li>
         <li className="topDiv">
           <h4>FG%</h4>
