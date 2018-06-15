@@ -21,3 +21,5 @@ test.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+full_schedule.js
