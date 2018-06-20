@@ -8,11 +8,14 @@
 }
 
 .App-header {
-  background-color: purple;
-  height: 150px;
+  background-color: #222;
+  height: 140px;
   padding: 20px;
   color: white;
-  min-width: 600px;
+}
+
+.App-title {
+  font-size: 1.5em;
 }
 
 .App-intro {
@@ -24,181 +27,94 @@
   to { transform: rotate(360deg); }
 }
 
-
-li {
-  list-style-type: none;
-  white-space: nowrap;
-  vertical-align: top;
-  display: inline-block;
-  max-height: 80px;
-}
-
-li.name {
-  border: 1px solid black;
-}
-
-li.topDiv {
-  border-top: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-li.cat-player {
-  border-left: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-}
-
-li.cat {
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
+ul {
+  margin: 5px;
+  padding: 0;
 }
 
 h4 {
-  margin-top: 3px;
-  overflow: hidden;
+  margin: 10px;
+}
+
+.no-dot {
+  list-style-type: none;
+}
+
+.height-restricted {
+  max-height: 150px
+  
+}
+
+.my-container {
+
+}
+
+.flex-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-button-parent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.my-flex-button {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+}
+
+.my-flex {
+  
+}
+
+.my-flex:hover {
+  cursor: pointer;
+}
+
+.gimme-space {
+  margin: 20px;
+}
+
+.gimme-lil-space {
+  margin: 5px;
+}
+
+.why-no-click {
+  position: relative;
+  display: inline-block;
+}
+.why-no-click .here-why {
+  top: 100%;
+  left: 50%; 
+  margin-left: -60px;
+  visibility: hidden;
+  font-size: 12px;
+  color: #333;
   text-align: center;
-  vertical-align: middle;
+  border-radius: 3px;
+  border: 1px solid gray;
+
+  position: absolute;
+  z-index: 1;
 }
 
-h5 {
-  max-height: 20px;
-  margin: 4px 0px;
-  overflow: hidden;
+.why-no-click .here-why::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;  /* At the top of the tooltip */
+  left: 50%;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
 }
 
-span.percent {
-  font-size: 13px;
-  padding-top: 12px;
-  vertical-align: middle;
+.why-no-click:hover .here-why {
+  visibility: visible;
 }
 
-span{
-  display: block;
-}
-
-.row {
-  padding-left: 0px;
-  white-space: nowrap;
-  overflow: hidden;
-  margin: 0px 0px;
-  max-height: 40px;
-}
-
-.topRow {
-  padding-left: 0px;
-  margin: 0px 0px 0px 40px;
-  white-space: nowrap;
-  overflow: hidden;
-  max-height: 35px;
-}
-
-
-
-.cat-player{
-  margin: 0px 0px;
-  height: 39px;
-  width: 118px;
-}
-
-.cat {
-  margin: 0px 0px;
-  width: 44px;
-  height: 39px;
-  text-align: center;
-  vertical-align: middle;
-  overflow: hidden;
-}
-
-.topDiv {
-  margin: 0px 0px;
-  height: 25px;
-  width: 44px;
-}
-.name {
-  width: 118px;
-}
-
-.portrait {
-  min-height: 40px;
-  max-height: 40px;
-  min-width: 40px;
-  max-width: 40px;
-}
-
-.display {
-  min-width: 600px;
-}
-
-.main{
-  margin: auto;
-  width: 700px;
-  border: 1px solid blue;
-  white-space: nowrap;
-}
-
-.nav {
-  float: left;
-  margin: auto;
-  padding: 10px;
-  display: inline-block;
-  /*min-width: 50px;*/
-  max-width: 100px;
-  border: 2px solid pink;
-  overflow: hidden;
-  vertical-align: top;
-}
-
-.nav:hover {
-  max-width: initial;
-}
-
-.nav-item {
-
-}
-
-.stats {
-  float: left;
-  margin-left: 2px;
-  display: inline-block;
-  overflow: hidden;
-}
-
-
-
-.standing{
-  margin-top: 0px;
-  padding-top: 1px;
-  height: 20px;
-  width: 20px;
-  float: left;
-  display: inline-block;
-  border-right: 1px solid gray;
-}
-
-.teamname{
-  display: inline-block;
-  margin-top: -2px;
-}
-
-.winloss{
-  /*display: inline-block;*/
-  margin-top: -5px;
-  border-top: 1px solid gray;
-}
-
-
-.potato {
-  padding-top: 10px;
-  vertical-align: middle;
-}
-
-
-.floatL {
-  float: left;
-  padding: 2px 0px 0px 0px;
-  width: 50px;
-  height: 20px;
-  font-size: 13px;
-  border-right: 1px solid gray;
+.small-font {
+  font-size: 14px;
 }
