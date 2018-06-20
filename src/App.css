@@ -9,7 +9,7 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 140px;
   padding: 20px;
   color: white;
 }
@@ -27,6 +27,94 @@
   to { transform: rotate(360deg); }
 }
 
+ul {
+  margin: 5px;
+  padding: 0;
+}
+
+h4 {
+  margin: 10px;
+}
+
 .no-dot {
   list-style-type: none;
+}
+
+.height-restricted {
+  max-height: 150px
+  
+}
+
+.my-container {
+
+}
+
+.flex-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-button-parent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.my-flex-button {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+}
+
+.my-flex {
+  
+}
+
+.my-flex:hover {
+  cursor: pointer;
+}
+
+.gimme-space {
+  margin: 20px;
+}
+
+.gimme-lil-space {
+  margin: 5px;
+}
+
+.why-no-click {
+  position: relative;
+  display: inline-block;
+}
+.why-no-click .here-why {
+  top: 100%;
+  left: 50%; 
+  margin-left: -60px;
+  visibility: hidden;
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+  border-radius: 3px;
+  border: 1px solid gray;
+
+  position: absolute;
+  z-index: 1;
+}
+
+.why-no-click .here-why::after {
+  content: " ";
+  position: absolute;
+  bottom: 100%;  /* At the top of the tooltip */
+  left: 50%;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.why-no-click:hover .here-why {
+  visibility: visible;
+}
+
+.small-font {
+  font-size: 14px;
 }

@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 import ball from './basketball.svg'
-import MyGrid from './Components/MyGrid';
 import MyTable from './Components/MyTable'
+const nba_logos = require.context('../public/logos', false, /\.svg$/);
+const team_logo = nba_logos.keys()
+      .reduce((image, key) => {
+        let x = key.split("/")
+        image[x[1]] = nba_logos(key)
+        return image
+      }, {});
 
 class MyLoading extends Component {
   constructor(props) {
@@ -28,52 +34,238 @@ class MyLoading extends Component {
   render() {
     return (
       <div>
-        <p>
+        <h1>
           {this.state.text}
-        </p>
+        </h1>
       </div>
     )
   }
+}
+
+function Matchup(props) {
+  const months={
+    '01': "Jan",
+    '02': "Feb",
+    '03': "Mar",
+    '04': "Apr",
+    '05': "May",
+    '06': "Jun",
+    '07': "Jul",
+    '08': "Aug",
+    '09': "Sep",
+    '10': "Oct",
+    '11': "Nov",
+    '12': "Dec"
+  }
+  let [yr,mo,dy] = props.gameDate[0]
+    ? props.gameDate[1].split('-')
+    : ['','',''];
+
+  return props.displayData
+      ? typeof props.displayData === "string"
+        ? (<p>{props.displayData}</p>)
+        : (
+          <div>
+            <br/>
+            <h4>Games on: {`${months[mo]} ${dy}, ${yr}`} </h4>
+            <ul className="flex-parent">
+              {props.displayData.map(x => {
+                if(x.postSeason && x.postSeason !== "closed") {
+                  return (
+                    <li key={x.id} className="no-dot why-no-click flex-button-parent">
+                      <button className="gimme-lil-space greyed my-flex-button" onClick={e=>e.preventDefault()}>{`${x.home.alias} vs ${x.away.alias}`}</button>
+                      <span className="here-why">Scheduled. Unnecessary.</span>
+                    </li>
+                  )
+                } else {
+                  return (
+                    <li key={x.id} className="no-dot ">
+                      <button className="gimme-lil-space my-flex-button flex-button-parent" onClick={e => props.findGame(x.id, x.home.alias, x.away.alias, e)}>
+                        {`${x.home.alias} vs ${x.away.alias}`}
+                      </button>
+                    </li>
+                  )
+                }
+              })}
+              </ul>
+            </div>
+            )
+      : null;
 }
 
 class GameChooser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-    
+      loading: false
     };
 
     this.findGame = this.findGame.bind(this);
+    this.showTeam = this.showTeam.bind(this);
   }
 
-  findGame(gameID, e) {
-    e.preventDefault();
 
-    this.setState({gameID});
+  showTeam(stats, team, e) {
+    e.preventDefault();
+    // Uncomment to show team stats
+    // const players_data = [{
+    //   name: team,
+    //   fgs: stats.team_stats.field_goals_pct.toFixed(2),
+    //   fts: stats.team_stats.free_throws_pct.toFixed(2),
+    //   tre: stats.team_stats.three_points_made,
+    //   pts: stats.team_stats.points,
+    //   reb: stats.team_stats.rebounds,
+    //   ast: stats.team_stats.assists,
+    //   stl: stats.team_stats.steals,
+    //   blk: stats.team_stats.blocks,
+    //   tos: stats.team_stats.turnovers
+    // }];
+    const players_data = [];
+    for (const x in stats.players) {
+      players_data.push({
+        name: stats.players[x].full_name,
+        min: stats.players[x].statistics.minutes,
+        fgs: stats.players[x].statistics.field_goals_pct.toFixed(2),
+        fts: stats.players[x].statistics.free_throws_pct.toFixed(2),
+        tre: stats.players[x].statistics.three_points_made,
+        pts: stats.players[x].statistics.points,
+        reb: stats.players[x].statistics.rebounds,
+        ast: stats.players[x].statistics.assists,
+        stl: stats.players[x].statistics.steals,
+        blk: stats.players[x].statistics.blocks,
+        tos: stats.players[x].statistics.turnovers
+      })
+    }
+
+    this.setState({
+      show_stats: players_data
+    })
+  }
+
+  findGame(gameID, home_team, away_team, e) {
+    e.preventDefault();
+    this.setState({loading: true});
+    if(this.state.searched_game === gameID){
+      return null
+    }
+    const uri1 = `${process.env.REACT_APP_myMongo}/matchup/search/${gameID}`;
+    fetch(uri1)
+      .then(data => data.json())
+      .then(extract => {
+        this.setState({
+          loading: false,
+          matchupStyles: {
+            gameID: "bold"
+          },
+          matchup: {
+            home: home_team,
+            away: away_team
+          },
+          score: {
+            home: extract.stats.home.team_stats.points,
+            away: extract.stats.away.team_stats.points
+          },
+          all_stats: extract.stats,
+          final_stats: [{
+            name: home_team,
+            fgs: extract.stats.home.team_stats.field_goals_pct.toFixed(2),
+            fts: extract.stats.home.team_stats.free_throws_pct.toFixed(2),
+            tre: extract.stats.home.team_stats.three_points_made,
+            pts: extract.stats.home.team_stats.points,
+            reb: extract.stats.home.team_stats.rebounds,
+            ast: extract.stats.home.team_stats.assists,
+            stl: extract.stats.home.team_stats.steals,
+            blk: extract.stats.home.team_stats.blocks,
+            tos: extract.stats.home.team_stats.turnovers
+          },{
+            name: away_team,
+            fgs: extract.stats.away.team_stats.field_goals_pct.toFixed(2),
+            fts: extract.stats.away.team_stats.free_throws_pct.toFixed(2),
+            tre: extract.stats.away.team_stats.three_points_made,
+            pts: extract.stats.away.team_stats.points,
+            reb: extract.stats.away.team_stats.rebounds,
+            ast: extract.stats.away.team_stats.assists,
+            stl: extract.stats.away.team_stats.steals,
+            blk: extract.stats.away.team_stats.blocks,
+            tos: extract.stats.away.team_stats.turnovers
+          }],
+          show_stats: [{
+            name: home_team,
+            fgs: extract.stats.home.team_stats.field_goals_pct.toFixed(2),
+            fts: extract.stats.home.team_stats.free_throws_pct.toFixed(2),
+            tre: extract.stats.home.team_stats.three_points_made,
+            pts: extract.stats.home.team_stats.points,
+            reb: extract.stats.home.team_stats.rebounds,
+            ast: extract.stats.home.team_stats.assists,
+            stl: extract.stats.home.team_stats.steals,
+            blk: extract.stats.home.team_stats.blocks,
+            tos: extract.stats.home.team_stats.turnovers
+          },{
+            name: away_team,
+            fgs: extract.stats.away.team_stats.field_goals_pct.toFixed(2),
+            fts: extract.stats.away.team_stats.free_throws_pct.toFixed(2),
+            tre: extract.stats.away.team_stats.three_points_made,
+            pts: extract.stats.away.team_stats.points,
+            reb: extract.stats.away.team_stats.rebounds,
+            ast: extract.stats.away.team_stats.assists,
+            stl: extract.stats.away.team_stats.steals,
+            blk: extract.stats.away.team_stats.blocks,
+            tos: extract.stats.away.team_stats.turnovers
+          }]
+        })
+      })
+      .catch(err=> {
+        console.log(err)
+        this.setState({
+          loading: false
+        })
+        return null
+      })
   }
 
   render() {
-    console.log("I have this prop: ", this.props.displayData);
-    const data = this.props.displayData
-      ? this.props.displayData === "no games played"
-        ? (<p>There were no games played on this date.</p>)
-        : (<ul className="no-dot">
-            {this.props.displayData.map(x => (
-              <li key={x.id} className="no-dot">
-                <button onClick={e => this.findGame(x.id, e)}>
-                  {`${x.home.alias} vs ${x.away.alias}`}
-                </button>
-              </li>
-            ))}
-            </ul>)
-      : null;
+    const showData = this.state.show_stats
+      ? (
+          <div className="my-container">
+            <div className="flex-parent">
+              <img 
+                src={team_logo[this.state.matchup.home+'.svg']} 
+                className="height-restricted  my-flex" 
+                onClick={e => this.showTeam(this.state.all_stats.home, this.state.matchup.home, e)} 
+                alt={this.state.matchup.home}
+              />
+              <h1 className={"gimme-space"}>{this.state.score.home}</h1>
+              <h3 className="">Final</h3>
+              <h1 className={"gimme-space"}>{this.state.score.away}</h1>
+              <img 
+                src={team_logo[this.state.matchup.away+'.svg']}
+                className="height-restricted  my-flex" 
+                onClick={e => this.showTeam(this.state.all_stats.away, this.state.matchup.away, e)} 
+                alt={this.state.matchup.away}/>
+            </div>
+            <div className={"flex-parent"}>
+              <p className={"gimme-lil-space"}>Boxscores - </p>
+              {<button className={"gimme-lil-space"} onClick={e => this.showTeam(this.state.all_stats.home, this.state.matchup.home, e)}>{this.state.matchup.home}</button>}
+              {<button className={"gimme-lil-space"} onClick={e => this.showTeam(this.state.all_stats.away, this.state.matchup.away, e)}>{this.state.matchup.away}</button>}
+              {<button className={"gimme-lil-space"} onClick={e => this.setState({show_stats: this.state.final_stats})}>FINAL</button>}
+            </div>
+            <MyTable stats={this.state.show_stats}/>
+          </div>
+        )
+      : null
 
+    const stats_loading = this.state.loading
+      ? <MyLoading/>
+      : null;
+    
     return (
       <div>
-        {data}
+        <Matchup findGame={this.findGame} displayData={this.props.displayData} gameDate={this.props.gameDate}/>
         <br/>
-        <h1>{this.state.gameID}</h1>
-        <MyTable stats={123} id={this.state.gameID}/>
+        {stats_loading}
+        {showData}
+        <br/>
+        <div></div>
       </div>
     )
   }
@@ -97,7 +289,9 @@ class DateSelector extends Component {
       },
       date: [false],
       display: null,
-      loading: false
+      display_date: null,
+      loading: false,
+      myPrompt: "Please select a date for the 2017-2018 NBA season."
     }
     this.didSubmit = this.didSubmit.bind(this);
     this.verifyDate = this.verifyDate.bind(this);
@@ -105,23 +299,33 @@ class DateSelector extends Component {
 
   didSubmit(dateArray, e) {
     e.preventDefault();
-    let [dateIsValid, dateData1] = dateArray;
-
-    if(!dateIsValid) {
+    
+    let [dateIsValid, date] = dateArray;
+    if(date === this.state.display_date) {
+      return null
+    } else if(!dateIsValid) {
       alert("Please choose a valid date");
     } else {
       this.setState({loading: true});
-      let uri1 = `${process.env.REACT_APP_myMongo}/games/find/${dateData1}`;
+      const uri1 = `${process.env.REACT_APP_myMongo}/games/find/${date}`;
       fetch(uri1)
         .then(resp => resp.json())
         .then(respJson => {
-          console.log("response data from submit: ", respJson);
+          const send = typeof respJson.response === "string"
+            ? respJson.response
+            : respJson.response.games
           this.setState({
+            myPrompt: null,
             loading: false,
-            display: respJson.response.games
+            display: send,
+            display_date: date
           });
         })
         .catch(err => {
+          this.setState({
+            loading: false,
+            display: "Error Loading Data"
+          })
           console.log("message: ", err.message);
         })
     }
@@ -164,29 +368,27 @@ class DateSelector extends Component {
         : [false,"invalid date"];
   }   
 
-  render() {
-    const myPrompt = "Please select a date for the 2017-2018 NBA season.";
-    console.log("What's my display state? ", this.state.display);
+  render() {    
     return (
       <div>
         <form onSubmit={(e)=>this.didSubmit(this.state.date, e)}>
           <label>
-            <h2>{myPrompt}</h2>
-            <br/>
+            <h4>{this.state.myPrompt}</h4>
             <input type="date" 
               min={`${this.state.season.begin.year}-${this.state.season.begin.month}-${this.state.season.begin.day}`}
               max={`${this.state.season.end.year}-${this.state.season.end.month}-${this.state.season.end.day}`}
               onChange={ e => {
                 const newDate = this.verifyDate(e.target.value, this.state.season);
+                this.didSubmit(newDate, e);
                 return this.setState({date: newDate});
               }}
             />
           </label>
-          <input type="submit" value="Submit" />
+          {/* <input type="submit" value="Submit" /> */}
         </form>
         {this.state.loading 
           ? <MyLoading/>
-          : <GameChooser displayData={this.state.display} />}
+          : <GameChooser gameDate={this.state.date} displayData={this.state.display} />}
       </div>
     )
   }
@@ -195,7 +397,6 @@ class DateSelector extends Component {
 
 class App extends Component {
   render() {
-
     return (
       <div className="App">
         <div className="App-header">
