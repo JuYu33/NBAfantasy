@@ -59,12 +59,14 @@ h4 {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
 }
 
 .my-flex-button {
   flex-shrink: 0;
-  flex-wrap: nowrap;
+}
+
+.buttext {
+  white-space: nowrap;
 }
 
 .my-flex {

@@ -6,7 +6,7 @@
     "react-scripts": "1.1.4"
   },
   "dependencies": {
-    "npm": "^6.0.0",
+    "npm": "^6.1.0",
     "react": "^16.3.2",
     "react-calendar": "^2.15.2",
     "react-dom": "^16.3.2",
@@ -14,7 +14,7 @@
     "react-table": "^6.8.6"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=1879 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
