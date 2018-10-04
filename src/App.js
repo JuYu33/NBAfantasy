@@ -52,7 +52,9 @@ class DateSelector extends Component {
     } else {
       this.setState({loading: true});
       const uri1 = `${process.env.REACT_APP_myMongo}/games/find/${date}`;
-      fetch(uri1)
+      fetch(uri1, {
+        mode: "cors"
+      })
         .then(resp => resp.json())
         .then(respJson => {
           const usableData = typeof respJson.response === "string"
@@ -123,9 +125,9 @@ class DateSelector extends Component {
   }
 
   hideCal(){
-    this.state.show 
-      ? this.setState({show:false})
-      : null
+    if(this.state.show ) {
+      this.setState({show:false})
+    }
   }
 
   render() {
@@ -405,6 +407,8 @@ class GameChooser extends Component {
           </div>
         )
       : null;
+    /*  
+    //OTHER DATES!
     const showOtherDates = this.state.team
       ? <OtherDates>
           <h3> Other {this.state.nicknames[this.state.team]} Games</h3>
@@ -417,6 +421,7 @@ class GameChooser extends Component {
           </ul>
         </OtherDates>
       : null;
+    */
 
     return (
       <div>
@@ -522,7 +527,8 @@ function Matchup(props) {
             )
       : null;
 }
-
+/*
+//OTHER DATES!
 function OtherDates(props) {
   return (
     <div>
@@ -530,7 +536,7 @@ function OtherDates(props) {
     </div>
   )
 }
-
+*/
 function MatchupButton(props) {
   return (
     <button className={"gimme-lil-space"} onClick={e => props.onShowTeam(props.data[0], props.data[1], e)}>{props.team}</button>
@@ -540,9 +546,19 @@ function MatchupButton(props) {
 function promiseLoad() {
   const uri1 = `${process.env.REACT_APP_DATEINIT}`;
   return new Promise((resolve, reject) => {
-    fetch(uri1)
-    .then(resp => resp.json())
+    fetch(uri1, {
+      mode: "cors",
+      // mode: "no-cors",
+      cache: "no-cache"
+    })
+    .then(resp => {
+      console.log("Response: ", resp);
+      const stringDis = JSON.stringify(resp);
+      console.log("Here be data?: ", stringDis);
+      return resp.json();
+    })
     .then(respJson => {
+      console.log("Json Resp: ", respJson);
       respJson.message === 'all games'
         ? resolve(respJson.data)
         : resolve('Fetched a failure');
@@ -578,10 +594,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
+        {/* <div className="App-header">
           <img src={ball} className="App-logo" alt="logo" />
           <h2>Welcome to NBA Stats</h2>
-        </div>
+        </div> */}
         <div>
           {this.state.db_error ? <h3>{this.state.db_error}</h3> : <DateSelector allDates={this.state.allDates}/>}
         </div>
