@@ -552,13 +552,9 @@ function promiseLoad() {
       cache: "no-cache"
     })
     .then(resp => {
-      console.log("Response: ", resp);
-      const stringDis = JSON.stringify(resp);
-      console.log("Here be data?: ", stringDis);
       return resp.json();
     })
     .then(respJson => {
-      console.log("Json Resp: ", respJson);
       respJson.message === 'all games'
         ? resolve(respJson.data)
         : resolve('Fetched a failure');
